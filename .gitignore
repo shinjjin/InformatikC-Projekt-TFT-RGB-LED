@@ -1,0 +1,11 @@
+
+*.o
+*.d
+*.xml
+*.elf
+*.map
+*.xml
+*.mk
+*.properties
+TFT-RGB-LED.X/Makefile
+/TFT-RGB-LED.X/.generated_files
