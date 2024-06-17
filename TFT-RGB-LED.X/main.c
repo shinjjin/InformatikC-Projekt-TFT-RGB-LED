@@ -8,7 +8,7 @@
 
 #include <avr/io.h>
 
-int main(void) {
+int main(void) { // hello :)
     while (1) {
     }
 }
