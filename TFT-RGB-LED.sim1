@@ -1,0 +1,47 @@
+<circuit version="" rev="df02fe" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="MCU" CircId="mega328-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-908,-248" rotation="0" hflip="1" vflip="1" label="mega328-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="16 MHz" Auto_Load="false" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" Clk_Out="false" SerialMon="-1" />
+
+<item itemtype="S65Display" CircId="S65Display-2" mainComp="false" Show_id="true" Show_Val="false" Pos="-744,-328" rotation="90" hflip="1" vflip="1" label="S65Display-2" idLabPos="-76,-237" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Push" CircId="Push-3" mainComp="false" Show_id="false" Show_Val="false" Pos="-724,-136" rotation="0" hflip="1" vflip="1" label="Push-3" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Norm_Close="false" Poles="1" />
+
+<item itemtype="Resistor" CircId="Resistor-4" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-724,-92" rotation="0" hflip="1" vflip="1" label="Resistor-4" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="100 Ω" />
+
+<item itemtype="Resistor" CircId="Resistor-5" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-724,-60" rotation="0" hflip="1" vflip="1" label="Resistor-5" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="100 Ω" />
+
+<item itemtype="LedRgb" CircId="LedRgb-6" mainComp="false" Show_id="false" Show_Val="false" Pos="-648,-84" rotation="0" hflip="1" vflip="1" label="LedRgb-6" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" CommonCathode="true" Threshold_R="2.4 V" MaxCurrent_R="0.03 A" Resistance_R="0.6 Ω" Threshold_G="3.5 V" MaxCurrent_G="0.03 A" Resistance_G="0.6 Ω" Threshold_B="3.5 V" MaxCurrent_B="0.03 A" Resistance_B="0.6 Ω" />
+
+<item itemtype="Ground" CircId="Ground-7" mainComp="false" Show_id="false" Show_Val="false" Pos="-584,-24" rotation="0" hflip="1" vflip="1" label="Ground-7" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Node" CircId="Node-8" mainComp="false" Pos="-584,-60" />
+
+<item itemtype="Node" CircId="Node-9" mainComp="false" Pos="-584,-84" />
+
+<item itemtype="Connector" uid="Connector-2" startpinid="Resistor-4-rPin" endpinid="LedRgb-6-Pin0" pointList="-708,-92,-664,-92" />
+
+<item itemtype="Connector" uid="Connector-3" startpinid="Resistor-5-rPin" endpinid="LedRgb-6-Pin1" pointList="-708,-60,-684,-60,-684,-84,-664,-84" />
+
+<item itemtype="Connector" uid="Connector-4" startpinid="LedRgb-6-Pin2" endpinid="Node-8-1" pointList="-664,-76,-676,-76,-676,-60,-584,-60" />
+
+<item itemtype="Connector" uid="Connector-6" startpinid="Node-8-2" endpinid="Ground-7-Gnd" pointList="-584,-60,-584,-40" />
+
+<item itemtype="Connector" uid="Connector-7" startpinid="Push-3-switch0pinN" endpinid="Node-9-1" pointList="-708,-136,-584,-136,-584,-84" />
+
+<item itemtype="Connector" uid="Connector-8" startpinid="LedRgb-6-Pin3" endpinid="Node-9-0" pointList="-632,-84,-584,-84" />
+
+<item itemtype="Connector" uid="Connector-9" startpinid="Node-9-2" endpinid="Node-8-0" pointList="-584,-84,-584,-60" />
+
+<item itemtype="Connector" uid="Connector-10" startpinid="Push-3-pinP0" endpinid="mega328-1-PORTB1" pointList="-740,-136,-868,-136" />
+
+<item itemtype="Connector" uid="Connector-11" startpinid="mega328-1-PORTD2" endpinid="S65Display-2-PinDc" pointList="-916,-216,-920,-216,-920,-328,-744,-328" />
+
+<item itemtype="Connector" uid="Connector-12" startpinid="mega328-1-PORTD3" endpinid="S65Display-2-PinRst" pointList="-916,-208,-932,-208,-932,-360,-744,-360" />
+
+<item itemtype="Connector" uid="Connector-13" startpinid="mega328-1-PORTB5" endpinid="S65Display-2-PinScl" pointList="-868,-168,-768,-168,-768,-296,-744,-296" />
+
+<item itemtype="Connector" uid="Connector-14" startpinid="mega328-1-PORTB3" endpinid="S65Display-2-PinSi" pointList="-868,-152,-780,-152,-780,-312,-744,-312" />
+
+<item itemtype="Connector" uid="Connector-15" startpinid="mega328-1-PORTB2" endpinid="S65Display-2-PinCs" pointList="-868,-144,-792,-144,-792,-344,-744,-344" />
+
+</circuit>
