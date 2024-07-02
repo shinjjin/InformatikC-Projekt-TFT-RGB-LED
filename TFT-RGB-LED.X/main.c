@@ -87,7 +87,7 @@ void Display_init(void) {
 
 int main(void){
     uint16_t i;
-	char text[] = "Ampel";
+	char text[] = "Ampel: ";
      
 	DDRB &= ~(1<<PORTB1);
 	PORTB |= (1<<PORTB1);
@@ -108,7 +108,7 @@ int main(void){
         SPISend8Bit(white);
 	}
 
-	// drawing the sqare (in the place the image should be called)
+	// drawing the sqare
 	SendCommandSeq(window, 6);
 	for (i = 0; i < 400; i++) // 20*20 = 400
 	{
