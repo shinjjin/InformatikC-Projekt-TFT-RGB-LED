@@ -1,18 +1,18 @@
 /******************************************************************************
-* Hochschule für Angewandte Wissenschaften Hamburg						      *
-* Fakultät DMI															      *
-* Department Medientechnik											 	      *
-* Veranstaltung: Informatik & Elektronik                                      *
-*******************************************************************************
-* Schriftdarstellung auf dem TFT-Display:    							      *
-* Das Display wird im Querformat betrieben.   							      *
-* Der Hintergrund wird weiß gefärbt. Es werden folgende Wörter in 3 Zeilen auf*
-* dem Display dargestellt:                                                    *
-* Media Systems                                                               *
-* Informatik                                                                  *
-* & Elektronik                                                                *
-* Dipl.-Ing. M. Berens													      *
-******************************************************************************/
+ * Hochschule für Angewandte Wissenschaften Hamburg						      *
+ * Fakultät DMI															      *
+ * Department Medientechnik											 	      *
+ * Veranstaltung: Informatik & Elektronik                                      *
+ *******************************************************************************
+ * Schriftdarstellung auf dem TFT-Display:    							      *
+ * Das Display wird im Querformat betrieben.   							      *
+ * Der Hintergrund wird weiß gefärbt. Es werden folgende Wörter in 3 Zeilen auf*
+ * dem Display dargestellt:                                                    *
+ * Media Systems                                                               *
+ * Informatik                                                                  *
+ * & Elektronik                                                                *
+ * Dipl.-Ing. M. Berens													      *
+ ******************************************************************************/
 
 #define F_CPU 16000000UL
 #include <xc.h>
@@ -23,34 +23,107 @@
 volatile uint16_t counter;
 uint8_t white = 0xFF;
 uint8_t black = 0x0;
-const uint16_t window[] = {0xEF08, 0x1806, 0x1232, 0x1545, 0x1361, 0x164E}; //Start, Format, x1, x2, y1, y2
+const uint16_t window[] = {0xEF08, 0x1806, 0x1232, 0x1545, 0x1361, 0x164E}; // Start, Format, x1, x2, y1, y2
 
-ISR(TIMER1_COMPA_vect){
-	counter++;	
+// defining functions
+ISR(TIMER1_COMPA_vect);
+void Waitms(const uint16_t msWait);
+void Timer1_init();
+void PWM_init();
+ISR(PCINT0_vect);
+void Display_init(void);
+
+int main(void)
+{
+	uint16_t i;
+	char text[] = "Ampel: ";
+
+	// setting up the ports
+	DDRB &= ~(1 << PORTB1);			   // input: PB1 -> Taster
+	PORTB |= (1 << PORTB1);			   // pull-up resistor
+	DDRD |= (1 << DDD5) | (1 << DDD6); // output: PD5, PD6 -> PWM
+	PWM_init();						   // setting up PWM
+
+	// pinchange interrupt
+	PCICR |= (1 << PCIE0);	 // enable pin change interrupt
+	PCMSK0 |= (1 << PCINT3); // enable pin change interrupt for PB3
+
+	// setting up display
+	DDRD |= (1 << D_C) | (1 << Reset); // output: PD2 -> Data/Command; PD3 -> Reset (initializing display pins)
+	Timer1_init();
+	SPI_init();
+	sei();
+	Display_init();
+
+	// drawing the background
+	for (i = 0; i < 23232; i++) // 132*176 = 23232
+	{
+		SPISend8Bit(white);
+		SPISend8Bit(white);
+	}
+
+	// drawing the sqare
+	SendCommandSeq(window, 6);
+	for (i = 0; i < 400; i++) // 20*20 = 400
+	{
+		SPISend8Bit(black);
+		SPISend8Bit(black);
+	}
+
+	// Schrift uebertragen
+	TFT_Print(text, 50, 20, 2, TFT_16BitBlue, TFT_16BitWhite, TFT_Landscape180); // Übergabe von 7 "Werten": Adresse des 1. Elements von mytext, x1, y1, scale,
+																				 // Schriftfarbe, Hintergrundfarbe, Display-Orientierung
+	while (1)
+	{
+		;
+	}
 }
 
-void Waitms(const uint16_t msWait){
+ISR(TIMER1_COMPA_vect)
+{
+	counter++;
+}
+
+ISR(PCINT0_vect)
+{
+	state = 1;
+}
+
+void Waitms(const uint16_t msWait)
+{
 	static uint16_t aktTime, diff;
 	uint16_t countertemp;
-	cli();              //da 16 bit Variablen könnte ohne cli() sei() sich der Wert
-	aktTime = counter;  //von counter ändern, bevor er komplett aktTime zugewiesen wird.
-	sei();              //Zuweisung erfolgt wg. 8 bit controller in 2 Schritten. 
-	do {
-			cli();
-			countertemp = counter;
-			sei();
-			  diff = countertemp + ~aktTime + 1;
-	  } while (diff	< msWait); 	
+	cli();			   // da 16 bit Variablen könnte ohne cli() sei() sich der Wert
+	aktTime = counter; // von counter ändern, bevor er komplett aktTime zugewiesen wird.
+	sei();			   // Zuweisung erfolgt wg. 8 bit controller in 2 Schritten.
+	do
+	{
+		cli();
+		countertemp = counter;
+		sei();
+		diff = countertemp + ~aktTime + 1;
+	} while (diff < msWait);
 }
 
-void Timer1_init(){
-	TCCR1B |= (1<<CS10) | (1<<WGM12);	// TimerCounter1ControlRegisterB Clock Select |(1<<CS10)=>prescaler = 1; WGM12=>CTC mode
-	TIMSK1 |= (1<<OCIE1A);				// TimerCounter1 Interrupt Mask Register: Output Compare Overflow Interrupt Enable
-	OCR1A = 15999;						// direkte Zahl macht Sinn; overflow register OCR1A berechnet mit division 64 => unlogischer Registerwert
+void Timer1_init()
+{
+	TCCR1B |= (1 << CS10) | (1 << WGM12); // TimerCounter1ControlRegisterB Clock Select |(1<<CS10)=>prescaler = 1; WGM12=>CTC mode
+	TIMSK1 |= (1 << OCIE1A);			  // TimerCounter1 Interrupt Mask Register: Output Compare Overflow Interrupt Enable
+	OCR1A = 15999;						  // direkte Zahl macht Sinn; overflow register OCR1A berechnet mit division 64 => unlogischer Registerwert
 }
 
-void Display_init(void) {
-	const uint16_t InitData[] ={
+void PWM_init()
+{
+	TCCR0A |= (1 << WGM00) | (1 << WGM01);	 // fast PWM mode (Mode 3) S. 106
+	TCCR0B |= (1 << CS02);					 // prescaler
+	TCCR0A |= (1 << COM0A1) | (1 << COM0B1); // Tabelle 15.3 - OC0A soll bei match auf 0 gesetzt werden -> COM0A1; Tabelle 15.6 --> COM0B1
+	OCR0A = 0;
+	OCR0B = 0;
+}
+
+void Display_init(void)
+{
+	const uint16_t InitData[] = {
 		// Initialisierungsdaten fuer 16-Bit-Farben Modus
 		0xFDFD, 0xFDFD,
 		// pause
@@ -63,17 +136,17 @@ void Display_init(void) {
 		0x7F01, 0xE181, 0xE202, 0xE276, 0xE183,
 		0x8001, 0xEF90, 0x0000,
 		// pause
-		0xEF08,	0x1806,	0x1200, 0x1583,	0x13AF,
+		0xEF08, 0x1806, 0x1200, 0x1583, 0x13AF,
 		0x1600 // Querformat um 180 gedreht 176 x 132 Pixel
 	};
 	Waitms(300);
-	PORTD &= ~(1<<Reset);	//Reset-Eingang des Displays auf Low => Beginn Hardware-Reset
+	PORTD &= ~(1 << Reset); // Reset-Eingang des Displays auf Low => Beginn Hardware-Reset
 	Waitms(75);
-	PORTB |= (1<<CS);		//SSEL auf High
+	PORTB |= (1 << CS); // SSEL auf High
 	Waitms(75);
-	PORTD |= (1<<D_C);		//Data/Command auf High
+	PORTD |= (1 << D_C); // Data/Command auf High
 	Waitms(75);
-	PORTD |= (1<<Reset);	//Reset-Eingang des Displays auf High => Ende Hardware Reset
+	PORTD |= (1 << Reset); // Reset-Eingang des Displays auf High => Ende Hardware Reset
 	Waitms(75);
 	SendCommandSeq(&InitData[0], 2);
 	Waitms(75);
@@ -82,42 +155,4 @@ void Display_init(void) {
 	SendCommandSeq(&InitData[12], 23);
 	Waitms(75);
 	SendCommandSeq(&InitData[35], 6);
-}
-
-
-int main(void){
-    uint16_t i;
-	char text[] = "Ampel: ";
-     
-	DDRB &= ~(1<<PORTB1);
-	PORTB |= (1<<PORTB1);
-	DDRD &= ~(1<<PORTD1);
-	PORTD |= (1<<PORTD1);
-	
-	DDRD |= (1<<D_C)|(1<<Reset);		//output: PD2 -> Data/Command; PD3 -> Reset
-
-	Timer1_init();
-	SPI_init();
-	sei();
-	Display_init();
-
-	// drawing the background
-	for (i = 0; i < 23232; i++) // 132*176 = 23232
-	{
-		SPISend8Bit(white);
-        SPISend8Bit(white);
-	}
-
-	// drawing the sqare
-	SendCommandSeq(window, 6);
-	for (i = 0; i < 400; i++) // 20*20 = 400
-	{
-		SPISend8Bit(black); 
-        SPISend8Bit(black);
-	}
-    
-    //Schrift uebertragen
-    TFT_Print(text, 50, 20, 2, TFT_16BitBlue, TFT_16BitWhite, TFT_Landscape180);	//Übergabe von 7 "Werten": Adresse des 1. Elements von mytext, x1, y1, scale, 
-            //Schriftfarbe, Hintergrundfarbe, Display-Orientierung    
-    while(1){;}
 }
