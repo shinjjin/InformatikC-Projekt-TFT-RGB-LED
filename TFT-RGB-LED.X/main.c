@@ -6,8 +6,6 @@
 
 // defining variables
 volatile uint16_t counter;
-uint8_t white = 0xFF;
-uint8_t black = 0x0;
 volatile uint8_t state = 0;
 const uint16_t window[] = {0xEF08, 0x1806, 0x1232, 0x1545, 0x1361, 0x164E}; // Start, Format, x1, x2, y1, y2
 
@@ -44,16 +42,14 @@ int main(void)
 	// drawing the background
 	for (i = 0; i < 23232; i++) // 132*176 = 23232
 	{
-		SPISend8Bit(white);
-		SPISend8Bit(white);
+        TFT_SPI_16BitPixelSend(TFT_16BitWhite);
 	}
 
 	// drawing the sqare
 	SendCommandSeq(window, 6);
 	for (i = 0; i < 400; i++) // 20*20 = 400
 	{
-		SPISend8Bit(black);
-		SPISend8Bit(black);
+        TFT_SPI_16BitPixelSend(TFT_16BitBlack);
 	}
 
 	// Schrift uebertragen
@@ -64,24 +60,44 @@ int main(void)
 		if (state == 1)
 		{
 			// red
-			OCR0A = 255;
-			OCR0B = 0;
+			OCR0A = 0;
+			OCR0B = 255;
+            SendCommandSeq(window, 6);
+            for (i = 0; i < 400; i++) // 20*20 = 400
+            {
+                TFT_SPI_16BitPixelSend(TFT_16BitRed);
+            }
 			Waitms(1000);
 
 			// yellow
 			OCR0A = 255;
 			OCR0B = 255;
+            SendCommandSeq(window, 6);
+            for (i = 0; i < 400; i++) // 20*20 = 400
+            {
+                TFT_SPI_16BitPixelSend(TFT_16BitYellow);
+            }
 			Waitms(1000);
 
 			// green
-			OCR0A = 0;
-			OCR0B = 255;
+			OCR0A = 255;
+			OCR0B = 0;
+             SendCommandSeq(window, 6);
+            for (i = 0; i < 400; i++) // 20*20 = 400
+            {
+                TFT_SPI_16BitPixelSend(TFT_16BitGreen);
+            }
 			Waitms(1000);
 
 			// off
 			OCR0A = 0;
 			OCR0B = 0;
 			state = 0;
+            SendCommandSeq(window, 6);
+	for (i = 0; i < 400; i++) // 20*20 = 400
+	{
+        TFT_SPI_16BitPixelSend(TFT_16BitBlack);
+	}
 		}
 	}
 }

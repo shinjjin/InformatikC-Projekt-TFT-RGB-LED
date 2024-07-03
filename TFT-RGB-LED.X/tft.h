@@ -18,7 +18,7 @@
 #define S32 int32_t
 	
 //Farbdefinitionen fuer 16-Bit-Modus 
-#define TFT_16BitGreen 		    	0x371F 
+#define TFT_16BitGreen 		    	0x07E0
 #define TFT_16BitBlack 		    	0x0000
 #define TFT_16BitOrange		    	0xFCC6
 #define TFT_16BitDark_Blue          0x0013
