@@ -8,7 +8,7 @@
 volatile uint16_t counter;
 uint8_t white = 0xFF;
 uint8_t black = 0x0;
-uint8_t state = 0;
+volatile uint8_t state = 0;
 const uint16_t window[] = {0xEF08, 0x1806, 0x1232, 0x1545, 0x1361, 0x164E}; // Start, Format, x1, x2, y1, y2
 
 // defining functions
