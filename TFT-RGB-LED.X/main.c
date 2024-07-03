@@ -117,7 +117,7 @@ int main(void){
 	}
     
     //Schrift uebertragen
-    TFT_Print(text, 20, 20, 2, TFT_16BitBlue, TFT_16BitWhite, TFT_Landscape180);	//Übergabe von 7 "Werten": Adresse des 1. Elements von mytext, x1, y1, scale, 
+    TFT_Print(text, 50, 20, 2, TFT_16BitBlue, TFT_16BitWhite, TFT_Landscape180);	//Übergabe von 7 "Werten": Adresse des 1. Elements von mytext, x1, y1, scale, 
             //Schriftfarbe, Hintergrundfarbe, Display-Orientierung    
     while(1){;}
 }
