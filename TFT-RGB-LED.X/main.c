@@ -60,7 +60,6 @@ int main(void)
 	{
 		if (state == 1)
 		{
-			// red
 			PORTD |= (1 << PD7);
 			OCR0A = 0;
 			OCR0B = 255;
@@ -72,7 +71,6 @@ int main(void)
 			Waitms(1000);
 			PORTD &= ~(1 << PD7);
 
-			// yellow
 			OCR0A = 255;
 			OCR0B = 255;
 			SendCommandSeq(window, 6);
@@ -82,10 +80,8 @@ int main(void)
 			}
 			Waitms(1000);
 
-			// green
 			OCR0A = 255;
 			OCR0B = 0;
-			SendCommandSeq(window, 6);
 			for (i = 0; i < 400; i++) // 20*20 = 400
 			{
 				TFT_SPI_16BitPixelSend(TFT_16BitGreen);
@@ -96,7 +92,6 @@ int main(void)
 			OCR0A = 0;
 			OCR0B = 0;
 			state = 0;
-			SendCommandSeq(window, 6);
 			for (i = 0; i < 400; i++) // 20*20 = 400
 			{
 				TFT_SPI_16BitPixelSend(TFT_16BitBlack);
@@ -140,9 +135,9 @@ void Timer1_init()
 
 void PWM_init()
 {
-	TCCR0A |= (1 << WGM00) | (1 << WGM01);	 // fast PWM mode (Mode 3) S. 106
-	TCCR0B |= (1 << CS02);					 // prescaler
-	TCCR0A |= (1 << COM0A1) | (1 << COM0B1); // Tabelle 15.3 - OC0A soll bei match auf 0 gesetzt werden -> COM0A1; Tabelle 15.6 --> COM0B1
+	TCCR0A |= (1 << WGM00) | (1 << WGM01);	 // fast PWM mode
+	TCCR0B |= (1 << CS02);					 // prescaler 256
+	TCCR0A |= (1 << COM0A1) | (1 << COM0B1); 
 	OCR0A = 0;
 	OCR0B = 0;
 }
