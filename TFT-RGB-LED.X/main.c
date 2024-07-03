@@ -27,6 +27,7 @@ int main(void)
 	PORTB |= (1 << PORTB1);			   // pull-up resistor
 	DDRD |= (1 << DDD5) | (1 << DDD6); // output: PD5, PD6 -> PWM
 	PWM_init();						   // setting up PWM
+	DDRD |= (1 << PD7);
 
 	// pinchange interrupt
 	PCICR |= (1 << PCIE0);	 // enable pin change interrupt
@@ -42,14 +43,14 @@ int main(void)
 	// drawing the background
 	for (i = 0; i < 23232; i++) // 132*176 = 23232
 	{
-        TFT_SPI_16BitPixelSend(TFT_16BitWhite);
+		TFT_SPI_16BitPixelSend(TFT_16BitWhite);
 	}
 
 	// drawing the sqare
 	SendCommandSeq(window, 6);
 	for (i = 0; i < 400; i++) // 20*20 = 400
 	{
-        TFT_SPI_16BitPixelSend(TFT_16BitBlack);
+		TFT_SPI_16BitPixelSend(TFT_16BitBlack);
 	}
 
 	// Schrift uebertragen
@@ -60,44 +61,46 @@ int main(void)
 		if (state == 1)
 		{
 			// red
+			PORTD |= (1 << PD7);
 			OCR0A = 0;
 			OCR0B = 255;
-            SendCommandSeq(window, 6);
-            for (i = 0; i < 400; i++) // 20*20 = 400
-            {
-                TFT_SPI_16BitPixelSend(TFT_16BitRed);
-            }
+			SendCommandSeq(window, 6);
+			for (i = 0; i < 400; i++) // 20*20 = 400
+			{
+				TFT_SPI_16BitPixelSend(TFT_16BitRed);
+			}
 			Waitms(1000);
+			PORTD &= ~(1 << PD7);
 
 			// yellow
 			OCR0A = 255;
 			OCR0B = 255;
-            SendCommandSeq(window, 6);
-            for (i = 0; i < 400; i++) // 20*20 = 400
-            {
-                TFT_SPI_16BitPixelSend(TFT_16BitYellow);
-            }
+			SendCommandSeq(window, 6);
+			for (i = 0; i < 400; i++) // 20*20 = 400
+			{
+				TFT_SPI_16BitPixelSend(TFT_16BitYellow);
+			}
 			Waitms(1000);
 
 			// green
 			OCR0A = 255;
 			OCR0B = 0;
-             SendCommandSeq(window, 6);
-            for (i = 0; i < 400; i++) // 20*20 = 400
-            {
-                TFT_SPI_16BitPixelSend(TFT_16BitGreen);
-            }
+			SendCommandSeq(window, 6);
+			for (i = 0; i < 400; i++) // 20*20 = 400
+			{
+				TFT_SPI_16BitPixelSend(TFT_16BitGreen);
+			}
 			Waitms(1000);
 
 			// off
 			OCR0A = 0;
 			OCR0B = 0;
 			state = 0;
-            SendCommandSeq(window, 6);
-	for (i = 0; i < 400; i++) // 20*20 = 400
-	{
-        TFT_SPI_16BitPixelSend(TFT_16BitBlack);
-	}
+			SendCommandSeq(window, 6);
+			for (i = 0; i < 400; i++) // 20*20 = 400
+			{
+				TFT_SPI_16BitPixelSend(TFT_16BitBlack);
+			}
 		}
 	}
 }

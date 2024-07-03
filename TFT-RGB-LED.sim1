@@ -16,6 +16,10 @@
 
 <item itemtype="Oscope" CircId="Oscope-10" mainComp="false" Show_id="false" Show_Val="false" Pos="-424,-188" rotation="0" hflip="1" vflip="1" label="Oscope-10" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _Px" Basic_Y="135 _Px" BufferSize="600000" connectGnd="true" InputImped="1e+07 Ω" TimDiv="1000000000" TimPos="0,0,0,0," VolDiv="1,1,1,1," Tunnels=",,,," Trigger="4" Filter="0.1 V" Trigger="4" AutoSC="4" Tracks="1" HideCh="false,false,false,false," VolPos="0,0,0,0," />
 
+<item itemtype="Led" CircId="Led-22" mainComp="false" Show_id="false" Show_Val="false" Pos="-1012,-180" rotation="0" hflip="1" vflip="1" label="Led-22" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="0.03 A" Resistance="0.6 Ω" />
+
+<item itemtype="Ground" CircId="Ground-23" mainComp="false" Show_id="false" Show_Val="false" Pos="-964,-160" rotation="0" hflip="1" vflip="1" label="Ground-23" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
 <item itemtype="Node" CircId="Node-8" mainComp="false" Pos="-584,-60" />
 
 <item itemtype="Node" CircId="Node-9" mainComp="false" Pos="-584,-84" />
@@ -50,8 +54,6 @@
 
 <item itemtype="Connector" uid="Connector-20" startpinid="Resistor-5-lPin" endpinid="Node-11-0" pointList="-740,-60,-752,-60" />
 
-<item itemtype="Connector" uid="Connector-21" startpinid="Node-11-2" endpinid="mega328-1-PORTD6" pointList="-752,-60,-940,-60,-940,-152,-916,-152" />
-
 <item itemtype="Connector" uid="Connector-22" startpinid="Node-12-1" endpinid="Oscope-10-Pin0" pointList="-772,-92,-772,-160,-568,-160,-568,-236,-512,-236" />
 
 <item itemtype="Connector" uid="Connector-23" startpinid="Resistor-4-lPin" endpinid="Node-12-0" pointList="-740,-92,-772,-92" />
@@ -67,5 +69,11 @@
 <item itemtype="Connector" uid="Connector-39" startpinid="Node-17-2" endpinid="mega328-1-PORTB1" pointList="-764,-136,-868,-136" />
 
 <item itemtype="Connector" uid="Connector-37" startpinid="Node-17-1" endpinid="Oscope-10-Pin3" pointList="-764,-136,-764,-140,-512,-140" />
+
+<item itemtype="Connector" uid="Connector-21" startpinid="Node-11-2" endpinid="mega328-1-PORTD6" pointList="-752,-60,-940,-60,-940,-152,-916,-152" />
+
+<item itemtype="Connector" uid="Connector-50" startpinid="mega328-1-PORTD7" endpinid="Led-22-lPin" pointList="-916,-144,-1028,-144,-1028,-180" />
+
+<item itemtype="Connector" uid="Connector-52" startpinid="Led-22-rPin" endpinid="Ground-23-Gnd" pointList="-996,-180,-964,-180,-964,-176" />
 
 </circuit>
