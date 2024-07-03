@@ -1,28 +1,14 @@
-/******************************************************************************
- * Hochschule für Angewandte Wissenschaften Hamburg						      *
- * Fakultät DMI															      *
- * Department Medientechnik											 	      *
- * Veranstaltung: Informatik & Elektronik                                      *
- *******************************************************************************
- * Schriftdarstellung auf dem TFT-Display:    							      *
- * Das Display wird im Querformat betrieben.   							      *
- * Der Hintergrund wird weiß gefärbt. Es werden folgende Wörter in 3 Zeilen auf*
- * dem Display dargestellt:                                                    *
- * Media Systems                                                               *
- * Informatik                                                                  *
- * & Elektronik                                                                *
- * Dipl.-Ing. M. Berens													      *
- ******************************************************************************/
-
 #define F_CPU 16000000UL
 #include <xc.h>
 #include "spi.h"
 #include "tft.h"
 #include <avr/interrupt.h>
 
+// defining variables
 volatile uint16_t counter;
 uint8_t white = 0xFF;
 uint8_t black = 0x0;
+uint8_t state = 0;
 const uint16_t window[] = {0xEF08, 0x1806, 0x1232, 0x1545, 0x1361, 0x164E}; // Start, Format, x1, x2, y1, y2
 
 // defining functions
@@ -46,7 +32,7 @@ int main(void)
 
 	// pinchange interrupt
 	PCICR |= (1 << PCIE0);	 // enable pin change interrupt
-	PCMSK0 |= (1 << PCINT3); // enable pin change interrupt for PB3
+	PCMSK0 |= (1 << PCINT1); // enable pin change interrupt for PB1
 
 	// setting up display
 	DDRD |= (1 << D_C) | (1 << Reset); // output: PD2 -> Data/Command; PD3 -> Reset (initializing display pins)
@@ -75,7 +61,28 @@ int main(void)
 																				 // Schriftfarbe, Hintergrundfarbe, Display-Orientierung
 	while (1)
 	{
-		;
+		if (state == 1)
+		{
+			// red
+			OCR0A = 255;
+			OCR0B = 0;
+			Waitms(1000);
+
+			// yellow
+			OCR0A = 255;
+			OCR0B = 255;
+			Waitms(1000);
+
+			// green
+			OCR0A = 0;
+			OCR0B = 255;
+			Waitms(1000);
+
+			// off
+			OCR0A = 0;
+			OCR0B = 0;
+			state = 0;
+		}
 	}
 }
 
